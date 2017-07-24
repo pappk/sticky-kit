@@ -14,6 +14,7 @@ $.fn.stick_in_parent = (opts={}) ->
     recalc_every
     parent: parent_selector
     offset_top
+    offset_bottom
     spacer: manual_spacer
     bottoming: enable_bottoming
   } = opts
@@ -22,6 +23,7 @@ $.fn.stick_in_parent = (opts={}) ->
   doc_height = doc.height()
 
   offset_top ?= 0
+  offset_bottom ?= 0
   parent_selector ?= undefined
   inner_scrolling ?= true
   sticky_class ?= "is_stuck"
@@ -138,7 +140,7 @@ $.fn.stick_in_parent = (opts={}) ->
 
         if fixed
           if enable_bottoming
-            will_bottom = scroll + height + offset > parent_height + parent_top
+            will_bottom = scroll + height + offset > parent_height + parent_top - offset_bottom
 
             # unbottom
             if bottomed && !will_bottom
@@ -207,7 +209,7 @@ $.fn.stick_in_parent = (opts={}) ->
         # this is down here because we can fix and bottom in same step when
         # scrolling huge
         if fixed && enable_bottoming
-          will_bottom ?= scroll + height + offset > parent_height + parent_top
+          will_bottom ?= scroll + height + offset > parent_height + parent_top - offset_bottom
 
           # bottomed
           if !bottomed && will_bottom
@@ -220,7 +222,7 @@ $.fn.stick_in_parent = (opts={}) ->
 
             elm.css({
               position: "absolute"
-              bottom: padding_bottom
+              bottom: padding_bottom + offset_bottom
               top: "auto"
             }).trigger("sticky_kit:bottom")
 
